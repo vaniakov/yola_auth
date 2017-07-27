@@ -1,4 +1,4 @@
-"""yola_auth URL Configuration"""
+"""users URL Configuration"""
 from users.views import UserViewSet
 from rest_framework.routers import DefaultRouter
 
