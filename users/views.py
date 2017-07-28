@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets, mixins
 from rest_framework import permissions
@@ -12,7 +12,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     serializer_class = UserSerializer
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
 
 

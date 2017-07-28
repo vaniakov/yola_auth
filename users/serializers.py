@@ -1,23 +1,23 @@
-from users.models import User
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
 
 class UserSerializer(serializers.ModelSerializer):
 
-    EDITABLE_FIELDS = ('email', 'first_name', 'last_name')
+    EDITABLE_FIELDS = ('first_name', 'last_name')
 
-    username = serializers.CharField(required=True)
+    email = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True, required=False)
     confirm_password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name',
+        model = get_user_model()
+        fields = ('id', 'email', 'first_name', 'last_name',
                   'is_staff', 'password', 'confirm_password',)
-        read_only_fields = ('username', )
+        read_only_fields = ('email', 'is_staff')
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        return get_user_model().objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
         for field_name in self.EDITABLE_FIELDS:
