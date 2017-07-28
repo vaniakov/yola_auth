@@ -1,7 +1,9 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+
 from rest_framework import serializers, exceptions
 from rest_framework.authtoken.models import Token
-from users.models import User as UserModel
 
 
 class TokenSerializer(serializers.ModelSerializer):
@@ -15,15 +17,13 @@ class TokenSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=False, allow_blank=False)
+    email = serializers.EmailField(required=True, allow_blank=False)
     password = serializers.CharField(style={'input_type': 'password'})
 
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
-
-        username = UserModel.objects.get(email=email).get_username()
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
 
         if user:
             if not user.is_active:
@@ -38,23 +38,23 @@ class LoginSerializer(serializers.Serializer):
 
 
 class RegisterSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        if UserModel.objects.filter(email=data['email'],
-                                    username=data['username']).exists():
+        UserModel = get_user_model()
+        if UserModel.objects.filter(email=data['email']).exists():
             raise serializers.ValidationError(
                 "A user is already registered with this e-mail address.")
+        validate_password(data['password'])
         return data
 
     def get_cleaned_data(self):
         return {
-            'username': self.validated_data.get('username', ''),
             'password': self.validated_data.get('password', ''),
             'email': self.validated_data.get('email', '')
         }
 
     def save(self, **kwargs):
+        UserModel = get_user_model()
         return UserModel.objects.create_user(**self.get_cleaned_data())
