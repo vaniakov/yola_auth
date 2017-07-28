@@ -67,6 +67,6 @@ class RegisterView(generics.CreateAPIView):
                         headers=headers)
 
     def perform_create(self, serializer):
-        user = serializer.save(self.request)
+        user = serializer.save()
         Token.objects.get_or_create(user=user)
         return user

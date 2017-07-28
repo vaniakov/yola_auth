@@ -56,5 +56,5 @@ class RegisterSerializer(serializers.Serializer):
             'email': self.validated_data.get('email', '')
         }
 
-    def save(self, request, **kwargs):
+    def save(self, **kwargs):
         return UserModel.objects.create_user(**self.get_cleaned_data())
