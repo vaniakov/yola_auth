@@ -1,13 +1,13 @@
 pipeline:
   ubuntu:
-    image: alpine-build-ubuntu-${UBUNTU_ARCH} 
+    image: alpine-build-ubuntu-${ARCH} 
     group: build
     commands:
       - python3 manage.py migrate 
       - python3 manage.py loaddata --app users users/fixtures/users.json 
       - python3 manage.py test 
   centos:
-    image: alpine-build-centos-${CENTOS_ARCH} 
+    image: alpine-build-centos-${ARCH} 
     group: build
     commands:
       - python3 manage.py migrate 
@@ -15,10 +15,6 @@ pipeline:
       - python3 manage.py test 
 
 matrix:
-  UBUNTU_ARCH:
-    - i32
-    - i64
-
-  CENTOS_ARCH:
+  ARCH:
     - i32
     - i64
