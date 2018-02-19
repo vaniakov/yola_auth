@@ -15,9 +15,9 @@ services:
       - DRONE_ADMIN=vaniakov
       - DRONE_OPEN=true
       - DRONE_GITHUB=true
-      - DRONE_GITHUB_CLIENT=e4ab687488f5ab6c0424
-      - DRONE_GITHUB_SECRET=8a7cf66fb25a1b28788201d1f815636006df1d97
-      - DRONE_SECRET=f41ee6e604e1c7a1a450c7452604bd333acc45731421
+      - DRONE_GITHUB_CLIENT=${GITHUB_CLIENT}
+      - DRONE_GITHUB_SECRET=${GITHUB_SECRET}
+      - DRONE_SECRET=${DRONE_SECRET}
 
   drone-agent:
     image: drone/agent:0.8.1
@@ -29,4 +29,4 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - DRONE_SERVER=drone-server:9000
-      - DRONE_SECRET=f41ee6e604e1c7a1a450c7452604bd333acc45731421
+      - DRONE_SECRET=${DRONE_SECRET}
