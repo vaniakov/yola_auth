@@ -1,20 +1,8 @@
 pipeline:
   ubuntu:
-    image: alpine-build-ubuntu-${ARCH} 
-    group: build
+    image: ubuntu:16.04
     commands:
       - python3 manage.py migrate 
       - python3 manage.py loaddata --app users users/fixtures/users.json 
       - python3 manage.py test 
-  centos:
-    image: alpine-build-centos-${ARCH} 
-    group: build
-    commands:
-      - python3 manage.py migrate 
-      - python3 manage.py loaddata --app users users/fixtures/users.json 
-      - python3 manage.py test 
-
-matrix:
-  ARCH:
-    - i32
-    - i64
+ 
